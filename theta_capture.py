@@ -114,8 +114,8 @@ def schedule_shoots():
             )
             wait_sec = (next_hour - datetime.datetime.now()).total_seconds()
         print(f"{wait_sec/60:.1f} 分後の {next_hour} に再開します…")
-        for sleepCount in range(0, 61):
-            print(f"残り{wait_sec * (60 - sleepCount)/60}秒")
+        for sleep_count in range(0, 61):
+            print(f"残り{wait_sec * (60 - sleep_count)/60}秒")
             time.sleep(wait_sec / 60)
 
 

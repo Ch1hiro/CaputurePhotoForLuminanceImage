@@ -8,31 +8,31 @@ STATUS_URL = f"http://{THETA_IP}/osc/commands/status"
 
 HEADERS = {"Content-Type": "application/json;charset=utf-8"}
 
-# 撮影設定リスト (ISO, ShutterSpeed, f, ColorTemperature)
+# 撮影設定リスト (ISO, shutter_speed, f, ColorTemperature)
 settings_list = [
-    {"iso": 100, "shutterSpeed": 0.00004, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 0.00008, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 0.0003125, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 0.000625, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 0.0025, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 0.005, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 0.02, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 0.04, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 0.16666666, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 0.33333333, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 0.625, "whiteBalance": 5200},
-    {"iso": 100, "shutterSpeed": 3.2, "whiteBalance": 5200},
+    {"iso": 100, "shutter_speed": 0.00004, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 0.00008, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 0.0003125, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 0.000625, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 0.0025, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 0.005, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 0.02, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 0.04, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 0.16666666, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 0.33333333, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 0.625, "white_balance": 5200},
+    {"iso": 100, "shutter_speed": 3.2, "white_balance": 5200},
 ]
 
 
-def set_options(iso, shutterSpeed, whiteBalance):
+def set_options(iso, shutter_speed, white_balance):
     options_command = {
         "name": "camera.setOptions",
         "parameters": {
             "options": {
                 "iso": iso,
-                "shutterSpeed": shutterSpeed,
-                "_colorTemperature": whiteBalance,
+                "shutterSpeed": shutter_speed,
+                "_colorTemperature": white_balance,
             }
         },
     }
@@ -42,6 +42,7 @@ def set_options(iso, shutterSpeed, whiteBalance):
 
 
 def take_picture():
+    """Take a picture using the Theta API"""
     take_command = {"name": "camera.takePicture"}
     resp = requests.post(EXECUTE_URL, json=take_command, headers=HEADERS)
     resp.raise_for_status()
@@ -49,6 +50,7 @@ def take_picture():
 
 
 def wait_for_completion(command_id):
+    """Wait a few seconds to complete"""
     while True:
         status_resp = requests.post(
             STATUS_URL, json={"id": command_id}, headers=HEADERS

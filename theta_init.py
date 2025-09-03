@@ -1,3 +1,5 @@
+"""Script for controlling RICOH THETA camera."""
+
 import requests
 
 # pylint: disable=duplicate-code

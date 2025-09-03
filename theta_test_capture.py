@@ -29,6 +29,7 @@ settings_list = [
 
 
 def set_options(iso, shutter_speed, white_balance):
+    """オプションを設定"""
     options_command = {
         "name": "camera.setOptions",
         "parameters": {

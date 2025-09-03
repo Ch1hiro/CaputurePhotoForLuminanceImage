@@ -30,6 +30,7 @@ settings_list = [
 
 
 def set_options(iso, shutter_speed, white_balance):
+    """オプションを設定"""
     options_command = {
         "name": "camera.setOptions",
         "parameters": {
@@ -47,6 +48,7 @@ def set_options(iso, shutter_speed, white_balance):
 
 
 def take_picture():
+    """Theta Web APIを用いて撮影"""
     take_command = {"name": "camera.takePicture"}
     resp = requests.post(EXECUTE_URL, json=take_command, headers=HEADERS)
     resp.raise_for_status()
@@ -54,6 +56,7 @@ def take_picture():
 
 
 def wait_for_completion(command_id):
+    """撮影完了まで処理を停止"""
     while True:
         status_resp = requests.post(
             STATUS_URL, json={"id": command_id}, headers=HEADERS

@@ -1,5 +1,7 @@
 import requests
 
+# pylint: disable=duplicate-code
+
 url = "http://192.168.1.1/osc/commands/execute"
 headers = {"Content-Type": "application/json;charset=utf-8"}
 

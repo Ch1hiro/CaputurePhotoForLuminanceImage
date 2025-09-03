@@ -2,6 +2,7 @@ import time
 
 import requests
 
+# pylint: disable=duplicate-code
 
 # カメラIP
 THETA_IP = "192.168.1.1"

@@ -1,5 +1,7 @@
-import requests
 import time
+
+import requests
+
 
 # カメラIP
 THETA_IP = "192.168.1.1"

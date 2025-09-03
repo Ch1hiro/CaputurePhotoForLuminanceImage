@@ -12,7 +12,7 @@ payload = {
     "parameters": {"options": {"captureMode": "image"}},
 }
 
-resp = requests.post(URL, json=payload, headers=HEADERS)
+resp = requests.post(URL, json=payload, headers=HEADERS, timeout=10)
 print(resp.json())
 
 payload = {
@@ -20,5 +20,5 @@ payload = {
     "parameters": {"options": {"exposureProgram": 1}},
 }
 
-resp = requests.post(URL, json=payload, headers=HEADERS)
+resp = requests.post(URL, json=payload, headers=HEADERS, timeout=10)
 print(resp.json())

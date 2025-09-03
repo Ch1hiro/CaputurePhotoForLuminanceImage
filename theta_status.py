@@ -15,5 +15,5 @@ payload = {
     },
 }
 
-resp = requests.post(URL, json=payload, headers=HEADERS)
+resp = requests.post(URL, json=payload, headers=HEADERS, timeout=10)
 print(resp.json())

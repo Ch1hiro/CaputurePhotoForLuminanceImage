@@ -44,7 +44,7 @@ def set_options(iso, shutter_speed, white_balance):
             }
         },
     }
-    resp = requests.post(EXECUTE_URL, json=options_command, headers=HEADERS)
+    resp = requests.post(EXECUTE_URL, json=options_command, headers=HEADERS, timeout=10)
     resp.raise_for_status()
     return resp.json()
 
@@ -52,7 +52,7 @@ def set_options(iso, shutter_speed, white_balance):
 def take_picture():
     """Theta Web APIを用いて撮影"""
     take_command = {"name": "camera.takePicture"}
-    resp = requests.post(EXECUTE_URL, json=take_command, headers=HEADERS)
+    resp = requests.post(EXECUTE_URL, json=take_command, headers=HEADERS, timeout=10)
     resp.raise_for_status()
     return resp.json()
 
@@ -61,7 +61,7 @@ def wait_for_completion(command_id):
     """撮影完了まで処理を停止"""
     while True:
         status_resp = requests.post(
-            STATUS_URL, json={"id": command_id}, headers=HEADERS
+            STATUS_URL, json={"id": command_id}, headers=HEADERS, timeout=10
         )
         status_resp.raise_for_status()
         status = status_resp.json()

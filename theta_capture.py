@@ -25,6 +25,7 @@ settings_list = [
     {"iso": 100, "shutterSpeed": 3.2, "whiteBalance": 5200},
 ]
 
+
 def set_options(iso, shutterSpeed, whiteBalance):
     options_command = {
         "name": "camera.setOptions",
@@ -33,13 +34,14 @@ def set_options(iso, shutterSpeed, whiteBalance):
                 "iso": iso,
                 "shutterSpeed": shutterSpeed,
                 "whiteBalance": "_colorTemperature",
-                "colorTemperature": whiteBalance
+                "colorTemperature": whiteBalance,
             }
-        }
+        },
     }
     resp = requests.post(EXECUTE_URL, json=options_command, headers=HEADERS)
     resp.raise_for_status()
     return resp.json()
+
 
 def take_picture():
     take_command = {"name": "camera.takePicture"}
@@ -47,14 +49,18 @@ def take_picture():
     resp.raise_for_status()
     return resp.json()
 
+
 def wait_for_completion(command_id):
     while True:
-        status_resp = requests.post(STATUS_URL, json={"id": command_id}, headers=HEADERS)
+        status_resp = requests.post(
+            STATUS_URL, json={"id": command_id}, headers=HEADERS
+        )
         status_resp.raise_for_status()
         status = status_resp.json()
         if status.get("state") == "done":
             return status.get("results")
         time.sleep(0.5)
+
 
 def capture_12():
     """設定リストに従って12枚連続撮影"""
@@ -71,6 +77,7 @@ def capture_12():
             print("撮影完了:", pic_result)
         else:
             print("即時撮影結果:", result)
+
 
 def schedule_shoots():
     """午前6時～午後7時まで1時間おきに3回ずつ撮影"""
@@ -89,15 +96,20 @@ def schedule_shoots():
             print(f"\n=== {hour}時の撮影完了 ===")
 
         # 次の「正時」まで待つ
-        next_hour = (now + datetime.timedelta(hours=1)).replace(minute=0, second=0, microsecond=0)
+        next_hour = (now + datetime.timedelta(hours=1)).replace(
+            minute=0, second=0, microsecond=0
+        )
         wait_sec = (next_hour - datetime.datetime.now()).total_seconds()
         if wait_sec < 0:
-            next_hour = (now + datetime.timedelta(hours=2)).replace(minute=0, second=0, microsecond=0)
+            next_hour = (now + datetime.timedelta(hours=2)).replace(
+                minute=0, second=0, microsecond=0
+            )
             wait_sec = (next_hour - datetime.datetime.now()).total_seconds()
         print(f"{wait_sec/60:.1f} 分後の {next_hour} に再開します…")
-        for sleepCount in range(0,61):
+        for sleepCount in range(0, 61):
             print(f"残り{wait_sec * (60 - sleepCount)/60}秒")
-            time.sleep(wait_sec/60)
+            time.sleep(wait_sec / 60)
+
 
 if __name__ == "__main__":
     schedule_shoots()

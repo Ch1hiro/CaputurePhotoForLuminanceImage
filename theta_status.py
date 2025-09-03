@@ -7,13 +7,8 @@ headers = {"Content-Type": "application/json;charset=utf-8"}
 payload = {
     "name": "camera.getOptions",
     "parameters": {
-        "optionNames": [
-            "iso",
-            "shutterSpeed",
-            "aperture",
-            "_colorTemperature"
-        ]
-    }
+        "optionNames": ["iso", "shutterSpeed", "aperture", "_colorTemperature"]
+    },
 }
 
 resp = requests.post(url, json=payload, headers=headers)

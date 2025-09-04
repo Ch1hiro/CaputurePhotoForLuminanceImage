@@ -3,16 +3,19 @@
 from enum import Enum
 import requests
 
+
 class ThetaConstans(str, Enum):
     THETA_IP = "192.168.1.1"
     EXECUTE_URL = f"http://{THETA_IP}/osc/commands/execute"
     STATUS_URL = f"http://{THETA_IP}/osc/commands/status"
     HEADERS = {"Content-Type": "application/json;charset=utf-8"}
 
+
 class Name(str, Enum):
     SET_OPTIONS = "camera.setOptions"
     GET_OPTIONS = "camera.getOptions"
     TAKE_PICTURE = "camera.takePicture"
+
 
 class Parameter(str, Enum):
     OPTIONS = "options"
@@ -29,7 +32,7 @@ def camera_init() -> None:
     """
     payload = _create_payload(
         Name.SET_OPTIONS,
-        {Parameter.OPTIONS: ["captureMode":"image", "exposureProgram":1]}
+        {Parameter.OPTIONS: {"captureMode": "image", "exposureProgram": 1}},
     )
 
 

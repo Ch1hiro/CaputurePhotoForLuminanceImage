@@ -78,6 +78,11 @@ def take_picture() -> dict[str, any]:
     Theta Web APIを用いて撮影
     """
     payload = _create_payload(Name.TAKE_PICTURE)
-    response = requests.post(ThetaConstans.EXECUTE_URL, json=payload, headers=ThetaConstans.HEADERS, timeout=10)
+    response = requests.post(
+        ThetaConstans.EXECUTE_URL, 
+        json=payload, 
+        headers=ThetaConstans.HEADERS, 
+        timeout=10
+        )
     response.raise_for_status()
     return response.json()

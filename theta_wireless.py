@@ -28,8 +28,7 @@ class ThetaWirelessResponse(dict[str,str], Enum):
 def _create_payload(name: str, parameters: dict[str, any] | None = None) -> dict[str, any]:
     if (dict is None):
         return {"name":name}
-    else:
-        return {"name": name, "parameters": parameters}
+    return {"name": name, "parameters": parameters}
 
 
 def set_options(parameters:dict[str, any]) -> dict[str, any]:
@@ -60,7 +59,7 @@ def get_options(option_names:set[str]) -> dict[str, any]:
         Name.GET_OPTIONS,
         {Parameter.OPTION_NAMES:option_names}
         )
-    
+
     try:
         response = requests.post(
             url=ThetaConstans.EXECUTE_URL,
@@ -71,7 +70,7 @@ def get_options(option_names:set[str]) -> dict[str, any]:
         return response.json
     except requests.exceptions.Timeout:
         return ThetaWirelessResponse.TIMEOUT
-    
+
 
 def take_picture() -> dict[str, any]:
     """

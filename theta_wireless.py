@@ -21,44 +21,63 @@ class Parameter(str, Enum):
     OPTIONS = "options"
     OPTION_NAMES = "optionNames"
 
+class ThetaWirelessResponse(dict[str,str], Enum):
+    TIMEOUT = {"error":"time_out"}
 
-def _create_payload(name: str, parameters: dict[str, any]) -> dict[str, any]:
-    return {"name": name, "parameters": parameters}
+
+def _create_payload(name: str, parameters: dict[str, any] | None = None) -> dict[str, any]:
+    if (dict is None):
+        return {"name":name}
+    else:
+        return {"name": name, "parameters": parameters}
 
 
-def camera_init() -> None:
+def set_options(parameters:dict[str, any]) -> dict[str, any]:
     """
-    カメラの初期化を行う関数
+    Thetaへオプションの設定を行う
     """
     payload = _create_payload(
         Name.SET_OPTIONS,
-        {Parameter.OPTIONS: {"captureMode": "image", "exposureProgram": 1}},
+        {Parameter.OPTIONS: parameters},
     )
 
+    try:
+        response = requests.post(
+            url=ThetaConstans.EXECUTE_URL,
+            json=payload,
+            headers=ThetaConstans.HEADERS,
+            timeout=10,
+        )
+        return response.json
+    except requests.exceptions.Timeout:
+        return ThetaWirelessResponse.TIMEOUT
 
-payload = {
-    "name": "camera.setOptions",
-    "parameters": {"options": {"captureMode": "image"}},
-}
+def get_options(option_names:set[str]) -> dict[str, any]:
+    """
+    Thetaに設定したオプションの情報を取得する
+    """
+    payload = _create_payload(
+        Name.GET_OPTIONS,
+        {Parameter.OPTION_NAMES:option_names}
+        )
+    
+    try:
+        response = requests.post(
+            url=ThetaConstans.EXECUTE_URL,
+            json=payload,
+            headers=ThetaConstans.HEADERS,
+            timeout=10
+        )
+        return response.json
+    except requests.exceptions.Timeout:
+        return ThetaWirelessResponse.TIMEOUT
+    
 
-resp = requests.post(url, json=payload, headers=headers)
-print(resp.json())
-
-payload = {
-    "name": "camera.setOptions",
-    "parameters": {"options": {"exposureProgram": 1}},
-}
-
-resp = requests.post(url, json=payload, headers=headers)
-print(resp.json())
-
-# 確認したいオプションを parameters に必ず入れる
-payload = {
-    "name": "camera.getOptions",
-    "parameters": {
-        "optionNames": ["iso", "shutterSpeed", "aperture", "_colorTemperature"]
-    },
-}
-
-resp = requests.post(url, json=payload, headers=headers)
-print(resp.json())
+def take_picture() -> dict[str, any]:
+    """
+    Theta Web APIを用いて撮影
+    """
+    payload = _create_payload(Name.TAKE_PICTURE)
+    response = requests.post(ThetaConstans.EXECUTE_URL, json=payload, headers=ThetaConstans.HEADERS, timeout=10)
+    response.raise_for_status()
+    return response.json()

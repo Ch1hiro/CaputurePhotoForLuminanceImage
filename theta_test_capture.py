@@ -2,16 +2,9 @@
 
 import time
 
-import requests
+import theta_wireless as tw
+from theta_wireless import Options
 
-# pylint: disable=duplicate-code
-
-# カメラIP
-THETA_IP = "192.168.1.1"
-EXECUTE_URL = f"http://{THETA_IP}/osc/commands/execute"
-STATUS_URL = f"http://{THETA_IP}/osc/commands/status"
-
-HEADERS = {"Content-Type": "application/json;charset=utf-8"}
 
 # 撮影設定リスト (ISO, shutter_speed, f, ColorTemperature)
 settings_list = [
@@ -32,37 +25,28 @@ settings_list = [
 
 def set_options(iso, shutter_speed, white_balance):
     """オプションを設定"""
-    options_command = {
-        "name": "camera.setOptions",
-        "parameters": {
-            "options": {
-                "iso": iso,
-                "shutterSpeed": shutter_speed,
-                "_colorTemperature": white_balance,
-            }
-        },
-    }
-    resp = requests.post(EXECUTE_URL, json=options_command, headers=HEADERS, timeout=10)
-    resp.raise_for_status()
-    return resp.json()
-
-
-def take_picture():
-    """Take a picture using the Theta API"""
-    take_command = {"name": "camera.takePicture"}
-    resp = requests.post(EXECUTE_URL, json=take_command, headers=HEADERS, timeout=10)
-    resp.raise_for_status()
+    tw.set_options(
+        {
+            Options.ISO:iso,
+            Options.SHUTTER_SPEED: shutter_speed,
+            Options.WHITE_BALANCE: Options.COLOR_TEMPERATURE,
+            Options.COLOR_TEMPERATURE: white_balance
+        }
+    )
+    resp = tw.get_options(
+        {
+            Options.ISO,
+            Options.SHUTTER_SPEED,
+            Options.COLOR_TEMPERATURE
+        }
+    )
     return resp.json()
 
 
 def wait_for_completion(command_id):
     """Wait a few seconds to complete"""
     while True:
-        status_resp = requests.post(
-            STATUS_URL, json={"id": command_id}, headers=HEADERS, timeout=10
-        )
-        status_resp.raise_for_status()
-        status = status_resp.json()
+        status = tw.check_status(command_id=command_id)
         if status.get("state") == "done":
             return status.get("results")
         time.sleep(0.5)
@@ -74,7 +58,7 @@ for idx, s in enumerate(settings_list, start=1):
     set_options(**s)
     print("設定完了:", s)
 
-    result = take_picture()
+    result = tw.take_picture()
     print("撮影コマンド送信:", result)
 
     if "id" in result:

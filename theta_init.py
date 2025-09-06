@@ -20,7 +20,7 @@ try:
             Options.SHUTTER_VOLUME
         }
     )
-    print(response.json())
+    print(response)
 
 except theta_wireless.CameraInternalError as e:
     print(f"Caught OSC API error: {e.code} -> {e.message}")

@@ -71,7 +71,7 @@ def _send_request_and_error_handle(url:_ThetaConstans, payload:dict[str, any], t
         if "error" in data:
             err = data["error"]
             raise CameraInternalError(err.get("code"), err.get("message"), data)
-        return response.json
+        return response.json()
     except requests.exceptions.Timeout as e:
         raise CameraTimeout("タイムアウトしました") from e
 

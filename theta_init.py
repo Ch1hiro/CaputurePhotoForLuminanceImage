@@ -27,4 +27,3 @@ except theta_wireless.CameraInternalError as e:
 
 except theta_wireless.CameraTimeout as e:
     print("Timeoutしました")
-

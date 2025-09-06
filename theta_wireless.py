@@ -31,7 +31,7 @@ class Options(str, Enum):
     COLOR_TEMPERATURE = "_colorTemperature" #Theta API only
     SHUTTER_VOLUME = "_shutterVolume" #Theta API only
 
-class CameraError(Exception):   
+class CameraError(Exception):
     """全てのカメラ関連エラーの基底クラス"""
 
 class CameraTimeout(CameraError):
@@ -54,7 +54,7 @@ class CameraInternalError(CameraError):
 
 
 def _create_payload(name: str, parameters: dict[str, any] | None = None) -> dict[str, any]:
-    if (dict is None):
+    if dict is None:
         return {"name":name}
     return {"name": name, "parameters": parameters}
 
@@ -145,9 +145,9 @@ def take_picture(timeout:float=10.0) -> dict[str, any]:
 
     try:
         response = requests.post(
-            _ThetaConstans.EXECUTE_URL, 
-            json=payload, 
-            headers=_ThetaConstans.HEADERS, 
+            _ThetaConstans.EXECUTE_URL,
+            json=payload,
+            headers=_ThetaConstans.HEADERS,
             timeout=timeout
             )
         response.raise_for_status()
@@ -158,14 +158,27 @@ def take_picture(timeout:float=10.0) -> dict[str, any]:
         return response.json()
     except requests.exceptions.Timeout as e:
         raise CameraTimeout("タイムアウトしました") from e
-    
 
-def check_status(command_id, timeout:float=10.0) -> dict[str, any]:
+
+def check_status(command_id:str, timeout:float=10.0) -> dict[str, any]:
+    """コマンドのステータスをチェックします。
+
+    Args:
+        command_id (str): コマンドのID
+        timeout (float, optional): POSTリクエストのタイムアウト時間. Defaults to 10.0.
+
+    Raises:
+        CameraInternalError: Theta内部でエラーが発生
+        CameraTimeout: リクエストのタイムアウト
+
+    Returns:
+        dict[str, any]: Thetaからのレスポンス
+    """
     try:
         response = requests.post(
-            _ThetaConstans.STATUS_URL, 
-            json={"id":command_id}, 
-            headers=_ThetaConstans.HEADERS, 
+            _ThetaConstans.STATUS_URL,
+            json={"id":command_id},
+            headers=_ThetaConstans.HEADERS,
             timeout=timeout
             )
         response.raise_for_status()

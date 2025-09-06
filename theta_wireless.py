@@ -59,7 +59,7 @@ def _create_payload(name: str, parameters: dict[str, any] | None = None) -> dict
         return {"name":name}
     return {"name": name, "parameters": parameters}
 
-def _send_request_and_error_handle(
+def _send_request(
         url:_ThetaConstans,
         payload:dict[str, any],
         timeout:float
@@ -98,7 +98,7 @@ def set_options(parameters:dict[str, any], timeout:float = 10.0) -> dict[str, an
         _Name.SET_OPTIONS,
         {_Parameter.OPTIONS: parameters},
     )
-    response_json = _send_request_and_error_handle(
+    response_json = _send_request(
         _ThetaConstans.EXECUTE_URL,
         payload=payload,
         timeout=timeout
@@ -123,7 +123,7 @@ def get_options(option_names:set[str], timeout:float = 10.0) -> dict[str, any]:
         _Name.GET_OPTIONS,
         {_Parameter.OPTION_NAMES:option_names}
         )
-    response_json = _send_request_and_error_handle(
+    response_json = _send_request(
         _ThetaConstans.EXECUTE_URL,
         payload=payload,
         timeout=timeout
@@ -144,7 +144,7 @@ def take_picture(timeout:float=10.0) -> dict[str, any]:
         dict[str, any]: Thetaからのレスポンス
     """
     payload = _create_payload(_Name.TAKE_PICTURE)
-    response_json = _send_request_and_error_handle(
+    response_json = _send_request(
         _ThetaConstans.EXECUTE_URL,
         payload=payload,
         timeout=timeout
@@ -165,7 +165,7 @@ def check_status(command_id:str, timeout:float=10.0) -> dict[str, any]:
     Returns:
         dict[str, any]: Thetaからのレスポンス
     """
-    response_json = _send_request_and_error_handle(
+    response_json = _send_request(
         _ThetaConstans.STATUS_URL,
         payload={"id":command_id},
         timeout=timeout

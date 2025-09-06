@@ -59,7 +59,11 @@ def _create_payload(name: str, parameters: dict[str, any] | None = None) -> dict
         return {"name":name}
     return {"name": name, "parameters": parameters}
 
-def _send_request_and_error_handle(url:_ThetaConstans, payload:dict[str, any], timeout:float) -> dict[str, any]:
+def _send_request_and_error_handle(
+        url:_ThetaConstans,
+        payload:dict[str, any],
+        timeout:float
+    ) -> dict[str, any]:
     try:
         response = requests.post(
             url=url,

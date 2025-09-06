@@ -22,6 +22,7 @@ class _Parameter(str, Enum):
     OPTION_NAMES = "optionNames"
 
 class Options(str, Enum):
+    """Thetaに指定できるOptionsのうち輝度画像合成に必要なもの"""
     CAPTURE_MODE = "captureMode"
     EXPOSURE_PROGRAM = "exposureProgram"
     SLEEP_DELAY = "sleepDelay"

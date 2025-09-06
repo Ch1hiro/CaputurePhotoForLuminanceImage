@@ -58,6 +58,23 @@ def _create_payload(name: str, parameters: dict[str, any] | None = None) -> dict
         return {"name":name}
     return {"name": name, "parameters": parameters}
 
+def _send_request_and_error_handle(url:_ThetaConstans, payload:dict[str, any], timeout:float) -> dict[str, any]:
+    try:
+        response = requests.post(
+            url=url,
+            json=payload,
+            headers=_ThetaConstans.HEADERS,
+            timeout=timeout,
+        )
+        response.raise_for_status()
+        data = response.json()
+        if "error" in data:
+            err = data["error"]
+            raise CameraInternalError(err.get("code"), err.get("message"), data)
+        return response.json
+    except requests.exceptions.Timeout as e:
+        raise CameraTimeout("タイムアウトしました") from e
+
 def set_options(parameters:dict[str, any], timeout:float = 10.0) -> dict[str, any]:
     """カメラにオプションを設定します。
 
@@ -76,22 +93,11 @@ def set_options(parameters:dict[str, any], timeout:float = 10.0) -> dict[str, an
         _Name.SET_OPTIONS,
         {_Parameter.OPTIONS: parameters},
     )
-
-    try:
-        response = requests.post(
-            url=_ThetaConstans.EXECUTE_URL,
-            json=payload,
-            headers=_ThetaConstans.HEADERS,
-            timeout=timeout,
-        )
-        response.raise_for_status()
-        data = response.json()
-        if "error" in data:
-            err = data["error"]
-            raise CameraInternalError(err.get("code"), err.get("message"), data)
-        return response.json
-    except requests.exceptions.Timeout as e:
-        raise CameraTimeout("タイムアウトしました") from e
+    _send_request_and_error_handle(
+        _ThetaConstans.EXECUTE_URL,
+        payload=payload,
+        timeout=timeout
+    )
 
 def get_options(option_names:set[str], timeout:float = 10.0) -> dict[str, any]:
     """カメラの状態を確認します。
@@ -111,22 +117,11 @@ def get_options(option_names:set[str], timeout:float = 10.0) -> dict[str, any]:
         _Name.GET_OPTIONS,
         {_Parameter.OPTION_NAMES:option_names}
         )
-
-    try:
-        response = requests.post(
-            url=_ThetaConstans.EXECUTE_URL,
-            json=payload,
-            headers=_ThetaConstans.HEADERS,
-            timeout=timeout
-        )
-        response.raise_for_status()
-        data = response.json()
-        if "error" in data:
-            err = data["error"]
-            raise CameraInternalError(err.get("code"), err.get("message"), data)
-        return response.json
-    except requests.exceptions.Timeout as e:
-        raise CameraTimeout("タイムアウトしました") from e
+    _send_request_and_error_handle(
+        _ThetaConstans.EXECUTE_URL,
+        payload=payload,
+        timeout=timeout
+    )
 
 def take_picture(timeout:float=10.0) -> dict[str, any]:
     """カメラで撮影します。
@@ -142,23 +137,11 @@ def take_picture(timeout:float=10.0) -> dict[str, any]:
         dict[str, any]: Thetaからのレスポンス
     """
     payload = _create_payload(_Name.TAKE_PICTURE)
-
-    try:
-        response = requests.post(
-            _ThetaConstans.EXECUTE_URL,
-            json=payload,
-            headers=_ThetaConstans.HEADERS,
-            timeout=timeout
-            )
-        response.raise_for_status()
-        data = response.json()
-        if "error" in data:
-            err = data["error"]
-            raise CameraInternalError(err.get("code"), err.get("message"), data)
-        return response.json()
-    except requests.exceptions.Timeout as e:
-        raise CameraTimeout("タイムアウトしました") from e
-
+    _send_request_and_error_handle(
+        _ThetaConstans.EXECUTE_URL,
+        payload=payload,
+        timeout=timeout
+    )
 
 def check_status(command_id:str, timeout:float=10.0) -> dict[str, any]:
     """コマンドのステータスをチェックします。
@@ -174,18 +157,8 @@ def check_status(command_id:str, timeout:float=10.0) -> dict[str, any]:
     Returns:
         dict[str, any]: Thetaからのレスポンス
     """
-    try:
-        response = requests.post(
-            _ThetaConstans.STATUS_URL,
-            json={"id":command_id},
-            headers=_ThetaConstans.HEADERS,
-            timeout=timeout
-            )
-        response.raise_for_status()
-        data = response.json()
-        if "error" in data:
-            err = data["error"]
-            raise CameraInternalError(err.get("code"), err.get("message"), data)
-        return response.json()
-    except requests.exceptions.Timeout as e:
-        raise CameraTimeout("タイムアウトしました") from e
+    _send_request_and_error_handle(
+        _ThetaConstans.STATUS_URL,
+        payload={"id":command_id},
+        timeout=timeout
+    )

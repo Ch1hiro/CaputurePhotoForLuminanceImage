@@ -40,7 +40,7 @@ def set_options(iso, shutter_speed, white_balance):
             Options.COLOR_TEMPERATURE
         }
     )
-    return resp.json()
+    return resp
 
 
 def wait_for_completion(command_id):

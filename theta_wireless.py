@@ -27,6 +27,7 @@ class Options(str, Enum):
     SLEEP_DELAY = "sleepDelay"
     ISO = "iso"
     SHUTTER_SPEED = "shutterSpeed"
+    WHITE_BALANCE = "whiteBalance"
     COLOR_TEMPERATURE = "_colorTemperature" #Theta API only
     SHUTTER_VOLUME = "_shutterVolume" #Theta API only
 

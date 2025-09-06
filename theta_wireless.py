@@ -21,6 +21,15 @@ class _Parameter(str, Enum):
     OPTIONS = "options"
     OPTION_NAMES = "optionNames"
 
+class Options(str, Enum):
+    CAPTURE_MODE = "captureMode"
+    EXPOSURE_PROGRAM = "exposureProgram"
+    SLEEP_DELAY = "sleepDelay"
+    ISO = "iso"
+    SHUTTER_SPEED = "shutterSpeed"
+    COLOR_TEMPERATURE = "_colorTemperature" #Theta API only
+    SHUTTER_VOLUME = "_shutterVolume" #Theta API only
+
 class CameraError(Exception):   
     """全てのカメラ関連エラーの基底クラス"""
 

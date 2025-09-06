@@ -93,11 +93,12 @@ def set_options(parameters:dict[str, any], timeout:float = 10.0) -> dict[str, an
         _Name.SET_OPTIONS,
         {_Parameter.OPTIONS: parameters},
     )
-    _send_request_and_error_handle(
+    response_json = _send_request_and_error_handle(
         _ThetaConstans.EXECUTE_URL,
         payload=payload,
         timeout=timeout
     )
+    return response_json
 
 def get_options(option_names:set[str], timeout:float = 10.0) -> dict[str, any]:
     """カメラの状態を確認します。
@@ -117,11 +118,12 @@ def get_options(option_names:set[str], timeout:float = 10.0) -> dict[str, any]:
         _Name.GET_OPTIONS,
         {_Parameter.OPTION_NAMES:option_names}
         )
-    _send_request_and_error_handle(
+    response_json = _send_request_and_error_handle(
         _ThetaConstans.EXECUTE_URL,
         payload=payload,
         timeout=timeout
     )
+    return response_json
 
 def take_picture(timeout:float=10.0) -> dict[str, any]:
     """カメラで撮影します。
@@ -137,11 +139,12 @@ def take_picture(timeout:float=10.0) -> dict[str, any]:
         dict[str, any]: Thetaからのレスポンス
     """
     payload = _create_payload(_Name.TAKE_PICTURE)
-    _send_request_and_error_handle(
+    response_json = _send_request_and_error_handle(
         _ThetaConstans.EXECUTE_URL,
         payload=payload,
         timeout=timeout
     )
+    return response_json
 
 def check_status(command_id:str, timeout:float=10.0) -> dict[str, any]:
     """コマンドのステータスをチェックします。
@@ -157,8 +160,9 @@ def check_status(command_id:str, timeout:float=10.0) -> dict[str, any]:
     Returns:
         dict[str, any]: Thetaからのレスポンス
     """
-    _send_request_and_error_handle(
+    response_json = _send_request_and_error_handle(
         _ThetaConstans.STATUS_URL,
         payload={"id":command_id},
         timeout=timeout
     )
+    return response_json

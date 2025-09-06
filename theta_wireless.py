@@ -158,3 +158,21 @@ def take_picture(timeout:float=10.0) -> dict[str, any]:
         return response.json()
     except requests.exceptions.Timeout as e:
         raise CameraTimeout("タイムアウトしました") from e
+    
+
+def check_status(command_id, timeout:float=10.0) -> dict[str, any]:
+    try:
+        response = requests.post(
+            _ThetaConstans.STATUS_URL, 
+            json={"id":command_id}, 
+            headers=_ThetaConstans.HEADERS, 
+            timeout=timeout
+            )
+        response.raise_for_status()
+        data = response.json()
+        if "error" in data:
+            err = data["error"]
+            raise CameraInternalError(err.get("code"), err.get("message"), data)
+        return response.json()
+    except requests.exceptions.Timeout as e:
+        raise CameraTimeout("タイムアウトしました") from e

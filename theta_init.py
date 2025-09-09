@@ -28,7 +28,7 @@ def init():
         print(f"Caught OSC API error: {e.code} -> {e.message}")
 
     except theta_wireless.CameraTimeout as e:
-        print("Timeoutしました")
+        print(f"Timeoutしました: {e}")
 
 if __name__ == "__main__":
     init()

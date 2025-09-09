@@ -5,6 +5,8 @@ import time
 import theta_wireless as tw
 from theta_wireless import Options
 
+# pylint: disable=duplicate-code
+
 
 # 撮影設定リスト (ISO, shutter_speed, f, ColorTemperature)
 settings_list = [

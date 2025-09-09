@@ -55,7 +55,7 @@ class CameraInternalError(CameraError):
 
 
 def _create_payload(name: str, parameters: dict[str, any] | None = None) -> dict[str, any]:
-    if dict is None:
+    if parameters is None:
         return {"name":name}
     return {"name": name, "parameters": parameters}
 

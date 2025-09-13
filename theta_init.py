@@ -1,24 +1,34 @@
-"""Script for controlling RICOH THETA camera."""
+"""Thetaカメラを初期化します"""
 
-import requests
+import theta_wireless
+from theta_wireless import Options
 
-# pylint: disable=duplicate-code
+def init():
+    """Thetaの初期化処理を行います。"""
+    try:
+        theta_wireless.set_options(
+            {
+                Options.CAPTURE_MODE:"image",
+                Options.EXPOSURE_PROGRAM:1,
+                Options.SLEEP_DELAY:65535,
+                Options.SHUTTER_VOLUME:0
+            }
+        )
+        response = theta_wireless.get_options(
+            {
+                Options.CAPTURE_MODE,
+                Options.EXPOSURE_PROGRAM,
+                Options.SLEEP_DELAY,
+                Options.SHUTTER_VOLUME
+            }
+        )
+        print(response)
 
-URL = "http://192.168.1.1/osc/commands/execute"
-HEADERS = {"Content-Type": "application/json;charset=utf-8"}
+    except theta_wireless.CameraInternalError as e:
+        print(f"Caught OSC API error: {e.code} -> {e.message}")
 
-payload = {
-    "name": "camera.setOptions",
-    "parameters": {"options": {"captureMode": "image"}},
-}
+    except theta_wireless.CameraTimeout as e:
+        print(f"Timeoutしました: {e}")
 
-resp = requests.post(URL, json=payload, headers=HEADERS, timeout=10)
-print(resp.json())
-
-payload = {
-    "name": "camera.setOptions",
-    "parameters": {"options": {"exposureProgram": 1}},
-}
-
-resp = requests.post(URL, json=payload, headers=HEADERS, timeout=10)
-print(resp.json())
+if __name__ == "__main__":
+    init()

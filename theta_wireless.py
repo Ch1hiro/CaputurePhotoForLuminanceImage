@@ -1,6 +1,7 @@
 """Theta Web APIを利用した関数"""
 
 from enum import Enum
+from typing import Optional
 import requests
 
 
@@ -54,7 +55,7 @@ class CameraInternalError(CameraError):
         super().__init__(f"OSC API Error [{code}]: {message}")
 
 
-def _create_payload(name: str, parameters: dict[str, any] | None = None) -> dict[str, any]:
+def _create_payload(name: str, parameters: Optional[dict[str, any]] = None) -> dict[str, any]:
     if parameters is None:
         return {"name":name}
     return {"name": name, "parameters": parameters}
